@@ -57,11 +57,21 @@ Discarded input sections
  .debug_str     0x0000000000000000       0xa6 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
  .ARM.attributes
                 0x0000000000000000       0x1c /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
- .text          0x0000000000000000        0x0 Debug/print.o
- .data          0x0000000000000000        0x0 Debug/print.o
- .bss           0x0000000000000000        0x0 Debug/print.o
+ .text          0x0000000000000000        0x0 Debug/memwrite.o
+ .data          0x0000000000000000        0x0 Debug/memwrite.o
+ .bss           0x0000000000000000        0x0 Debug/memwrite.o
+ .text.print_str
+                0x0000000000000000       0x1a Debug/memwrite.o
  .text.print_int
-                0x0000000000000000       0x40 Debug/print.o
+                0x0000000000000000       0x40 Debug/memwrite.o
+ .text.int_to_str
+                0x0000000000000000      0x100 Debug/memwrite.o
+ .text.println_char
+                0x0000000000000000       0x32 Debug/memwrite.o
+ .text.println_char_custom
+                0x0000000000000000       0x34 Debug/memwrite.o
+ .text.println_int
+                0x0000000000000000       0x52 Debug/memwrite.o
  .text          0x0000000000000000        0x0 Debug/system_stm32f4xx.o
  .data          0x0000000000000000        0x0 Debug/system_stm32f4xx.o
  .bss           0x0000000000000000        0x0 Debug/system_stm32f4xx.o
@@ -172,7 +182,7 @@ Linker script and memory map
 LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crti.o
 LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crtbegin.o
 LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
-LOAD Debug/print.o
+LOAD Debug/memwrite.o
 LOAD Debug/system_stm32f4xx.o
 LOAD Debug/startup_stm32f411xe.o
 LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a
@@ -201,153 +211,145 @@ LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp
                 0x0000000008000000                g_pfnVectors
                 0x0000000008000198                . = ALIGN (0x4)
 
-.text           0x0000000008000198      0x3c0
+.text           0x0000000008000198      0x264
                 0x0000000008000198                . = ALIGN (0x4)
  *(.text)
  *(.text*)
- .text.main     0x0000000008000198       0x70 Debug/print.o
+ .text.main     0x0000000008000198       0x7c Debug/memwrite.o
                 0x0000000008000198                main
- .text.syscall  0x0000000008000208       0x20 Debug/print.o
-                0x0000000008000208                syscall
+ .text.syscall  0x0000000008000214       0x20 Debug/memwrite.o
+                0x0000000008000214                syscall
  .text.print_char
-                0x0000000008000228       0x20 Debug/print.o
-                0x0000000008000228                print_char
- .text.print_str
-                0x0000000008000248       0x1a Debug/print.o
-                0x0000000008000248                print_str
- *fill*         0x0000000008000262        0x2 
- .text.int_to_str
-                0x0000000008000264      0x100 Debug/print.o
-                0x0000000008000264                int_to_str
- .text.println_char
-                0x0000000008000364       0x32 Debug/print.o
-                0x0000000008000364                println_char
- .text.println_char_custom
-                0x0000000008000396       0x34 Debug/print.o
-                0x0000000008000396                println_char_custom
+                0x0000000008000234       0x20 Debug/memwrite.o
+                0x0000000008000234                print_char
  .text.println_str
-                0x00000000080003ca       0x2c Debug/print.o
-                0x00000000080003ca                println_str
- .text.println_int
-                0x00000000080003f6       0x52 Debug/print.o
-                0x00000000080003f6                println_int
+                0x0000000008000254       0x2c Debug/memwrite.o
+                0x0000000008000254                println_str
+ .text.open_host_file
+                0x0000000008000280       0x1a Debug/memwrite.o
+                0x0000000008000280                open_host_file
+ .text.read_host_file_to_mem
+                0x000000000800029a       0x1a Debug/memwrite.o
+                0x000000000800029a                read_host_file_to_mem
+ .text.str_len  0x00000000080002b4       0x38 Debug/memwrite.o
+                0x00000000080002b4                str_len
  .text.SystemInit
-                0x0000000008000448       0x5c Debug/system_stm32f4xx.o
-                0x0000000008000448                SystemInit
+                0x00000000080002ec       0x5c Debug/system_stm32f4xx.o
+                0x00000000080002ec                SystemInit
  .text.Reset_Handler
-                0x00000000080004a4       0x50 Debug/startup_stm32f411xe.o
-                0x00000000080004a4                Reset_Handler
+                0x0000000008000348       0x50 Debug/startup_stm32f411xe.o
+                0x0000000008000348                Reset_Handler
  .text.Default_Handler
-                0x00000000080004f4        0x2 Debug/startup_stm32f411xe.o
-                0x00000000080004f4                DMA1_Stream3_IRQHandler
-                0x00000000080004f4                EXTI2_IRQHandler
-                0x00000000080004f4                DebugMon_Handler
-                0x00000000080004f4                SPI4_IRQHandler
-                0x00000000080004f4                TIM1_CC_IRQHandler
-                0x00000000080004f4                DMA2_Stream5_IRQHandler
-                0x00000000080004f4                HardFault_Handler
-                0x00000000080004f4                DMA1_Stream5_IRQHandler
-                0x00000000080004f4                SysTick_Handler
-                0x00000000080004f4                PVD_IRQHandler
-                0x00000000080004f4                SDIO_IRQHandler
-                0x00000000080004f4                TAMP_STAMP_IRQHandler
-                0x00000000080004f4                PendSV_Handler
-                0x00000000080004f4                NMI_Handler
-                0x00000000080004f4                EXTI3_IRQHandler
-                0x00000000080004f4                TIM1_UP_TIM10_IRQHandler
-                0x00000000080004f4                I2C3_ER_IRQHandler
-                0x00000000080004f4                EXTI0_IRQHandler
-                0x00000000080004f4                I2C2_EV_IRQHandler
-                0x00000000080004f4                DMA1_Stream2_IRQHandler
-                0x00000000080004f4                FPU_IRQHandler
-                0x00000000080004f4                UsageFault_Handler
-                0x00000000080004f4                DMA2_Stream2_IRQHandler
-                0x00000000080004f4                SPI1_IRQHandler
-                0x00000000080004f4                TIM1_BRK_TIM9_IRQHandler
-                0x00000000080004f4                DMA2_Stream3_IRQHandler
-                0x00000000080004f4                USART6_IRQHandler
-                0x00000000080004f4                DMA2_Stream0_IRQHandler
-                0x00000000080004f4                TIM4_IRQHandler
-                0x00000000080004f4                I2C1_EV_IRQHandler
-                0x00000000080004f4                DMA1_Stream6_IRQHandler
-                0x00000000080004f4                DMA1_Stream1_IRQHandler
-                0x00000000080004f4                TIM3_IRQHandler
-                0x00000000080004f4                RCC_IRQHandler
-                0x00000000080004f4                Default_Handler
-                0x00000000080004f4                EXTI15_10_IRQHandler
-                0x00000000080004f4                ADC_IRQHandler
-                0x00000000080004f4                DMA1_Stream7_IRQHandler
-                0x00000000080004f4                SPI5_IRQHandler
-                0x00000000080004f4                TIM5_IRQHandler
-                0x00000000080004f4                DMA2_Stream7_IRQHandler
-                0x00000000080004f4                I2C3_EV_IRQHandler
-                0x00000000080004f4                EXTI9_5_IRQHandler
-                0x00000000080004f4                RTC_WKUP_IRQHandler
-                0x00000000080004f4                SPI2_IRQHandler
-                0x00000000080004f4                MemManage_Handler
-                0x00000000080004f4                DMA1_Stream0_IRQHandler
-                0x00000000080004f4                SVC_Handler
-                0x00000000080004f4                EXTI4_IRQHandler
-                0x00000000080004f4                WWDG_IRQHandler
-                0x00000000080004f4                TIM2_IRQHandler
-                0x00000000080004f4                OTG_FS_WKUP_IRQHandler
-                0x00000000080004f4                TIM1_TRG_COM_TIM11_IRQHandler
-                0x00000000080004f4                EXTI1_IRQHandler
-                0x00000000080004f4                USART2_IRQHandler
-                0x00000000080004f4                I2C2_ER_IRQHandler
-                0x00000000080004f4                DMA2_Stream1_IRQHandler
-                0x00000000080004f4                FLASH_IRQHandler
-                0x00000000080004f4                DMA2_Stream4_IRQHandler
-                0x00000000080004f4                BusFault_Handler
-                0x00000000080004f4                USART1_IRQHandler
-                0x00000000080004f4                OTG_FS_IRQHandler
-                0x00000000080004f4                SPI3_IRQHandler
-                0x00000000080004f4                DMA1_Stream4_IRQHandler
-                0x00000000080004f4                I2C1_ER_IRQHandler
-                0x00000000080004f4                DMA2_Stream6_IRQHandler
-                0x00000000080004f4                RTC_Alarm_IRQHandler
- *fill*         0x00000000080004f6        0x2 
+                0x0000000008000398        0x2 Debug/startup_stm32f411xe.o
+                0x0000000008000398                DMA1_Stream3_IRQHandler
+                0x0000000008000398                EXTI2_IRQHandler
+                0x0000000008000398                DebugMon_Handler
+                0x0000000008000398                SPI4_IRQHandler
+                0x0000000008000398                TIM1_CC_IRQHandler
+                0x0000000008000398                DMA2_Stream5_IRQHandler
+                0x0000000008000398                HardFault_Handler
+                0x0000000008000398                DMA1_Stream5_IRQHandler
+                0x0000000008000398                SysTick_Handler
+                0x0000000008000398                PVD_IRQHandler
+                0x0000000008000398                SDIO_IRQHandler
+                0x0000000008000398                TAMP_STAMP_IRQHandler
+                0x0000000008000398                PendSV_Handler
+                0x0000000008000398                NMI_Handler
+                0x0000000008000398                EXTI3_IRQHandler
+                0x0000000008000398                TIM1_UP_TIM10_IRQHandler
+                0x0000000008000398                I2C3_ER_IRQHandler
+                0x0000000008000398                EXTI0_IRQHandler
+                0x0000000008000398                I2C2_EV_IRQHandler
+                0x0000000008000398                DMA1_Stream2_IRQHandler
+                0x0000000008000398                FPU_IRQHandler
+                0x0000000008000398                UsageFault_Handler
+                0x0000000008000398                DMA2_Stream2_IRQHandler
+                0x0000000008000398                SPI1_IRQHandler
+                0x0000000008000398                TIM1_BRK_TIM9_IRQHandler
+                0x0000000008000398                DMA2_Stream3_IRQHandler
+                0x0000000008000398                USART6_IRQHandler
+                0x0000000008000398                DMA2_Stream0_IRQHandler
+                0x0000000008000398                TIM4_IRQHandler
+                0x0000000008000398                I2C1_EV_IRQHandler
+                0x0000000008000398                DMA1_Stream6_IRQHandler
+                0x0000000008000398                DMA1_Stream1_IRQHandler
+                0x0000000008000398                TIM3_IRQHandler
+                0x0000000008000398                RCC_IRQHandler
+                0x0000000008000398                Default_Handler
+                0x0000000008000398                EXTI15_10_IRQHandler
+                0x0000000008000398                ADC_IRQHandler
+                0x0000000008000398                DMA1_Stream7_IRQHandler
+                0x0000000008000398                SPI5_IRQHandler
+                0x0000000008000398                TIM5_IRQHandler
+                0x0000000008000398                DMA2_Stream7_IRQHandler
+                0x0000000008000398                I2C3_EV_IRQHandler
+                0x0000000008000398                EXTI9_5_IRQHandler
+                0x0000000008000398                RTC_WKUP_IRQHandler
+                0x0000000008000398                SPI2_IRQHandler
+                0x0000000008000398                MemManage_Handler
+                0x0000000008000398                DMA1_Stream0_IRQHandler
+                0x0000000008000398                SVC_Handler
+                0x0000000008000398                EXTI4_IRQHandler
+                0x0000000008000398                WWDG_IRQHandler
+                0x0000000008000398                TIM2_IRQHandler
+                0x0000000008000398                OTG_FS_WKUP_IRQHandler
+                0x0000000008000398                TIM1_TRG_COM_TIM11_IRQHandler
+                0x0000000008000398                EXTI1_IRQHandler
+                0x0000000008000398                USART2_IRQHandler
+                0x0000000008000398                I2C2_ER_IRQHandler
+                0x0000000008000398                DMA2_Stream1_IRQHandler
+                0x0000000008000398                FLASH_IRQHandler
+                0x0000000008000398                DMA2_Stream4_IRQHandler
+                0x0000000008000398                BusFault_Handler
+                0x0000000008000398                USART1_IRQHandler
+                0x0000000008000398                OTG_FS_IRQHandler
+                0x0000000008000398                SPI3_IRQHandler
+                0x0000000008000398                DMA1_Stream4_IRQHandler
+                0x0000000008000398                I2C1_ER_IRQHandler
+                0x0000000008000398                DMA2_Stream6_IRQHandler
+                0x0000000008000398                RTC_Alarm_IRQHandler
+ *fill*         0x000000000800039a        0x2 
  .text.__libc_init_array
-                0x00000000080004f8       0x48 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
-                0x00000000080004f8                __libc_init_array
+                0x000000000800039c       0x48 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+                0x000000000800039c                __libc_init_array
  *(.glue_7)
- .glue_7        0x0000000008000540        0x0 linker stubs
+ .glue_7        0x00000000080003e4        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x0000000008000540        0x0 linker stubs
+ .glue_7t       0x00000000080003e4        0x0 linker stubs
  *(.eh_frame)
  *(.init)
- .init          0x0000000008000540        0x4 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crti.o
-                0x0000000008000540                _init
- .init          0x0000000008000544        0x8 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crtn.o
+ .init          0x00000000080003e4        0x4 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crti.o
+                0x00000000080003e4                _init
+ .init          0x00000000080003e8        0x8 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crtn.o
  *(.fini)
- .fini          0x000000000800054c        0x4 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crti.o
-                0x000000000800054c                _fini
- .fini          0x0000000008000550        0x8 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crtn.o
-                0x0000000008000558                . = ALIGN (0x4)
-                0x0000000008000558                _etext = .
+ .fini          0x00000000080003f0        0x4 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crti.o
+                0x00000000080003f0                _fini
+ .fini          0x00000000080003f4        0x8 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crtn.o
+                0x00000000080003fc                . = ALIGN (0x4)
+                0x00000000080003fc                _etext = .
 
-.vfp11_veneer   0x0000000008000558        0x0
- .vfp11_veneer  0x0000000008000558        0x0 linker stubs
+.vfp11_veneer   0x00000000080003fc        0x0
+ .vfp11_veneer  0x00000000080003fc        0x0 linker stubs
 
-.v4_bx          0x0000000008000558        0x0
- .v4_bx         0x0000000008000558        0x0 linker stubs
+.v4_bx          0x00000000080003fc        0x0
+ .v4_bx         0x00000000080003fc        0x0 linker stubs
 
-.iplt           0x0000000008000558        0x0
- .iplt          0x0000000008000558        0x0 Debug/print.o
+.iplt           0x00000000080003fc        0x0
+ .iplt          0x00000000080003fc        0x0 Debug/memwrite.o
 
-.rodata         0x0000000008000558       0x18
-                0x0000000008000558                . = ALIGN (0x4)
+.rodata         0x00000000080003fc       0xb0
+                0x00000000080003fc                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x0000000008000558       0x15 Debug/print.o
+ .rodata        0x00000000080003fc       0xae Debug/memwrite.o
  *(.rodata*)
-                0x0000000008000570                . = ALIGN (0x4)
- *fill*         0x000000000800056d        0x3 
-                0x0000000008000570                _sidata = LOADADDR (.data)
+                0x00000000080004ac                . = ALIGN (0x4)
+ *fill*         0x00000000080004aa        0x2 
+                0x00000000080004ac                _sidata = LOADADDR (.data)
 
-.rel.dyn        0x0000000008000570        0x0
- .rel.iplt      0x0000000008000570        0x0 Debug/print.o
+.rel.dyn        0x00000000080004ac        0x0
+ .rel.iplt      0x00000000080004ac        0x0 Debug/memwrite.o
 
-.data           0x0000000020000000        0x0 load address 0x0000000008000570
+.data           0x0000000020000000        0x0 load address 0x00000000080004ac
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -355,11 +357,11 @@ LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _edata = .
 
-.igot.plt       0x0000000020000000        0x0 load address 0x0000000008000570
- .igot.plt      0x0000000020000000        0x0 Debug/print.o
+.igot.plt       0x0000000020000000        0x0 load address 0x00000000080004ac
+ .igot.plt      0x0000000020000000        0x0 Debug/memwrite.o
                 0x0000000020000000                . = ALIGN (0x4)
 
-.bss            0x0000000020000000        0x0 load address 0x0000000008000570
+.bss            0x0000000020000000        0x0 load address 0x00000000080004ac
                 0x0000000020000000                _sbss = .
                 0x0000000020000000                __bss_start__ = _sbss
  *(.bss)
@@ -368,7 +370,7 @@ LOAD /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _ebss = .
                 0x0000000020000000                __bss_end__ = _ebss
-OUTPUT(Debug/print.elf elf32-littlearm)
+OUTPUT(Debug/memwrite.elf elf32-littlearm)
 LOAD linker stubs
 
 .ARM.attributes
@@ -376,7 +378,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x0000000000000000       0x1e /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crti.o
  .ARM.attributes
-                0x000000000000001e       0x32 Debug/print.o
+                0x000000000000001e       0x32 Debug/memwrite.o
  .ARM.attributes
                 0x0000000000000050       0x32 Debug/system_stm32f4xx.o
  .ARM.attributes
@@ -387,61 +389,61 @@ LOAD linker stubs
                 0x00000000000000d5       0x1e /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/thumb/v7e-m+fp/softfp/crtn.o
 
 .comment        0x0000000000000000       0x57
- .comment       0x0000000000000000       0x57 Debug/print.o
+ .comment       0x0000000000000000       0x57 Debug/memwrite.o
                                          0x58 (size before relaxing)
  .comment       0x0000000000000057       0x58 Debug/system_stm32f4xx.o
  .comment       0x0000000000000057       0x58 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
 
-.debug_info     0x0000000000000000      0x993
- .debug_info    0x0000000000000000      0x377 Debug/print.o
- .debug_info    0x0000000000000377      0x4ef Debug/system_stm32f4xx.o
- .debug_info    0x0000000000000866       0x22 Debug/startup_stm32f411xe.o
- .debug_info    0x0000000000000888      0x10b /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+.debug_info     0x0000000000000000      0xad1
+ .debug_info    0x0000000000000000      0x4b5 Debug/memwrite.o
+ .debug_info    0x00000000000004b5      0x4ef Debug/system_stm32f4xx.o
+ .debug_info    0x00000000000009a4       0x22 Debug/startup_stm32f411xe.o
+ .debug_info    0x00000000000009c6      0x10b /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
 
-.debug_abbrev   0x0000000000000000      0x298
- .debug_abbrev  0x0000000000000000       0xf5 Debug/print.o
- .debug_abbrev  0x00000000000000f5       0xc8 Debug/system_stm32f4xx.o
- .debug_abbrev  0x00000000000001bd       0x12 Debug/startup_stm32f411xe.o
- .debug_abbrev  0x00000000000001cf       0xc9 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+.debug_abbrev   0x0000000000000000      0x2e1
+ .debug_abbrev  0x0000000000000000      0x13e Debug/memwrite.o
+ .debug_abbrev  0x000000000000013e       0xc8 Debug/system_stm32f4xx.o
+ .debug_abbrev  0x0000000000000206       0x12 Debug/startup_stm32f411xe.o
+ .debug_abbrev  0x0000000000000218       0xc9 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
 
-.debug_loc      0x0000000000000000      0x23e
- .debug_loc     0x0000000000000000      0x23e Debug/print.o
+.debug_loc      0x0000000000000000      0x2da
+ .debug_loc     0x0000000000000000      0x2da Debug/memwrite.o
 
-.debug_aranges  0x0000000000000000       0xd0
+.debug_aranges  0x0000000000000000       0xe8
  .debug_aranges
-                0x0000000000000000       0x68 Debug/print.o
+                0x0000000000000000       0x80 Debug/memwrite.o
  .debug_aranges
-                0x0000000000000068       0x20 Debug/system_stm32f4xx.o
+                0x0000000000000080       0x20 Debug/system_stm32f4xx.o
  .debug_aranges
-                0x0000000000000088       0x28 Debug/startup_stm32f411xe.o
+                0x00000000000000a0       0x28 Debug/startup_stm32f411xe.o
  .debug_aranges
-                0x00000000000000b0       0x20 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+                0x00000000000000c8       0x20 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
 
-.debug_ranges   0x0000000000000000       0x88
- .debug_ranges  0x0000000000000000       0x58 Debug/print.o
- .debug_ranges  0x0000000000000058       0x10 Debug/system_stm32f4xx.o
- .debug_ranges  0x0000000000000068       0x20 Debug/startup_stm32f411xe.o
+.debug_ranges   0x0000000000000000       0xa0
+ .debug_ranges  0x0000000000000000       0x70 Debug/memwrite.o
+ .debug_ranges  0x0000000000000070       0x10 Debug/system_stm32f4xx.o
+ .debug_ranges  0x0000000000000080       0x20 Debug/startup_stm32f411xe.o
 
-.debug_line     0x0000000000000000      0x50c
- .debug_line    0x0000000000000000      0x1cb Debug/print.o
- .debug_line    0x00000000000001cb      0x135 Debug/system_stm32f4xx.o
- .debug_line    0x0000000000000300       0x84 Debug/startup_stm32f411xe.o
- .debug_line    0x0000000000000384      0x188 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+.debug_line     0x0000000000000000      0x58c
+ .debug_line    0x0000000000000000      0x24b Debug/memwrite.o
+ .debug_line    0x000000000000024b      0x135 Debug/system_stm32f4xx.o
+ .debug_line    0x0000000000000380       0x84 Debug/startup_stm32f411xe.o
+ .debug_line    0x0000000000000404      0x188 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
 
-.debug_str      0x0000000000000000      0x5e7
- .debug_str     0x0000000000000000      0x212 Debug/print.o
-                                        0x24b (size before relaxing)
- .debug_str     0x0000000000000212      0x1ae Debug/system_stm32f4xx.o
+.debug_str      0x0000000000000000      0x674
+ .debug_str     0x0000000000000000      0x29f Debug/memwrite.o
+                                        0x2f1 (size before relaxing)
+ .debug_str     0x000000000000029f      0x1ae Debug/system_stm32f4xx.o
                                         0x37e (size before relaxing)
- .debug_str     0x00000000000003c0       0x30 Debug/startup_stm32f411xe.o
+ .debug_str     0x000000000000044d       0x30 Debug/startup_stm32f411xe.o
                                          0x81 (size before relaxing)
- .debug_str     0x00000000000003f0      0x1f7 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+ .debug_str     0x000000000000047d      0x1f7 /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
                                         0x286 (size before relaxing)
 
-.debug_frame    0x0000000000000000      0x184
- .debug_frame   0x0000000000000000      0x138 Debug/print.o
- .debug_frame   0x0000000000000138       0x20 Debug/system_stm32f4xx.o
- .debug_frame   0x0000000000000158       0x2c /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
+.debug_frame    0x0000000000000000      0x1d4
+ .debug_frame   0x0000000000000000      0x188 Debug/memwrite.o
+ .debug_frame   0x0000000000000188       0x20 Debug/system_stm32f4xx.o
+ .debug_frame   0x00000000000001a8       0x2c /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-init.o)
 
 .debug_loclists
                 0x0000000000000000       0x44
@@ -571,18 +573,21 @@ exit                                              /Applications/ARM/bin/../lib/g
                                                   /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
 g_pfnVectors                                      Debug/startup_stm32f411xe.o
 hardware_init_hook                                /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
-int_to_str                                        Debug/print.o
-main                                              Debug/print.o
+int_to_str                                        Debug/memwrite.o
+main                                              Debug/memwrite.o
                                                   Debug/startup_stm32f411xe.o
                                                   /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
 memset                                            /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/libc_nano.a(lib_a-memset.o)
                                                   /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
-print_char                                        Debug/print.o
-print_int                                         Debug/print.o
-print_str                                         Debug/print.o
-println_char                                      Debug/print.o
-println_char_custom                               Debug/print.o
-println_int                                       Debug/print.o
-println_str                                       Debug/print.o
+open_host_file                                    Debug/memwrite.o
+print_char                                        Debug/memwrite.o
+print_int                                         Debug/memwrite.o
+print_str                                         Debug/memwrite.o
+println_char                                      Debug/memwrite.o
+println_char_custom                               Debug/memwrite.o
+println_int                                       Debug/memwrite.o
+println_str                                       Debug/memwrite.o
+read_host_file_to_mem                             Debug/memwrite.o
 software_init_hook                                /Applications/ARM/bin/../lib/gcc/arm-none-eabi/11.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp/crt0.o
-syscall                                           Debug/print.o
+str_len                                           Debug/memwrite.o
+syscall                                           Debug/memwrite.o

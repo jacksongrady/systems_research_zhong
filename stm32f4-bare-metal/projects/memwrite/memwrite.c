@@ -1,6 +1,21 @@
 #include "stm32f411xe.h"
 
 /*************************************************
+* struct declarations
+*************************************************/
+typedef struct _FileInput{
+    char* path;
+    int perms;
+    int path_length
+} FileInput;
+
+typedef struct _ReadInput{
+    int fd;
+    void* buff;
+    int num_bytes
+} ReadInput;
+
+/*************************************************
 * function declarations
 *************************************************/
 int main(void);
@@ -11,28 +26,44 @@ int print_str(char* str);
 int println_char(char c);
 int println_int(int i);
 int println_str(char* str);
+int open_host_file(FileInput* file);
+int read_host_file_to_mem(ReadInput* read_input);
 int int_to_str(char* buf, int i, int size);
-int println_char_custom(char c);
+int str_len(char* str);
 
+int println_char_custom(char c);
 
 
 /*************************************************
 * main code starts from here
 *************************************************/
 int main(void){
-    char a = 'A';
-    char b = 'b';
-    char c = 'c';
-    char d = 'd';
-    char e = 'e';
-    print_char(a);
-    print_char(b);
-    print_char(c);
-    println_char(d);
-    println_char(e);
-    println_int(100023202);
-    println_char_custom('A');
-    println_str("hello this is a test");
+    char* path_name = "/Users/jacksondgrady/Desktop/zhong_research/stm32f4-bare-metal/projects/memwrite/hello.txt";
+    FileInput file;
+    file.path = path_name;
+    file.path_length = str_len(path_name);
+    file.perms = 2;
+
+    println_str("opening file...");
+
+    int fd = open_host_file(&file);
+
+    println_str("opened file");
+
+    ReadInput read;
+    read.fd = fd;
+    read.buff = 0x20001000;
+    read.num_bytes = 10;
+
+    println_str("writing to target memory...");
+
+    read_host_file_to_mem(&read);
+
+    println_str("wrote to target memory...");
+
+    char* string = 0x20001000;
+    string[10] = '\0';
+    println_str(string);
 
     while (1){
 
@@ -139,3 +170,23 @@ int println_int(int i){
 
 }
 
+int open_host_file(FileInput* file){
+    return syscall(0x01, (int)file);
+}
+
+int read_host_file_to_mem(ReadInput* read_input){
+    return syscall(0x06, (int)read_input);
+}
+
+int str_len(char* str){
+    int i = 0;
+    while(1){
+        if(str[i++] == '\0'){
+            break;
+        }
+        if(i > 1000000){
+            return -1;
+        }
+    }
+    return i - 1;
+}
