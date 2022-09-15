@@ -38,32 +38,62 @@ int println_char_custom(char c);
 * main code starts from here
 *************************************************/
 int main(void){
-    char* path_name = "/Users/jacksondgrady/Desktop/zhong_research/stm32f4-bare-metal/projects/memwrite/hello.txt";
-    FileInput file;
-    file.path = path_name;
-    file.path_length = str_len(path_name);
-    file.perms = 2;
 
-    println_str("opening file...");
+    RCC->AHB1ENR |= 0x00000009;
 
-    int fd = open_host_file(&file);
+   
+    GPIOD->MODER &= 0xFCFFFFFF;   // Reset bits 25:24 to clear old values
+    //GPIOD->MODER |= 0x01000000;   // Set MODER bits 25:24 to 01
+    GPIOD->MODER |= 0x55000000; // Set MODER bits 31:24 to 01
 
-    println_str("opened file");
+    char* high_path = "/Users/jacksondgrady/Desktop/zhong_research/stm32f4-bare-metal/projects/semihost_blink/high.txt";
+    char* low_path = "/Users/jacksondgrady/Desktop/zhong_research/stm32f4-bare-metal/projects/semihost_blink/low.txt";
+    FileInput high;
+    high.path = high_path;
+    high.path_length = str_len(high_path);
+    high.perms = 2;
 
-    ReadInput read;
-    read.fd = fd;
-    read.buff = 0x20001500;
-    read.num_bytes = 10;
+    FileInput low;
+    low.path = low_path;
+    low.path_length = str_len(low_path);
+    low.perms = 2;
 
-    println_str("writing to target memory...");
+    println_str("opening files...");
 
-    read_host_file_to_mem(&read);
+    int high_fd = open_host_file(&high);
+    int low_fd = open_host_file(&low);
 
-    println_str("wrote to target memory...");
+    println_str("opened files");
+    // *ptr |= (1 << 12);
+    //*(ptr) = 1;
 
-    char* string = 0x20001000;
-    string[10] = '\0';
-    println_str(string);
+    ReadInput green_led;
+    green_led.fd = high_fd;
+    green_led.buff = 0x40020C14;
+    green_led.num_bytes = 4;
+
+    //println_str("writing to target memory...");
+    
+    while(1){
+
+        green_led.fd = high_fd;
+
+        read_host_file_to_mem(&green_led);
+
+
+        for(int i = 0; i < 500000; i++){
+
+        }
+        green_led.fd = low_fd;
+
+        read_host_file_to_mem(&green_led);
+
+        for(int i = 0; i < 500000; i++){
+            
+        }
+
+
+    }
 
     while (1){
 
