@@ -46,57 +46,24 @@ int main(void){
     //GPIOD->MODER |= 0x01000000;   // Set MODER bits 25:24 to 01
     GPIOD->MODER |= 0x55000000; // Set MODER bits 31:24 to 01
 
-    char* high_path = "/Users/jacksondgrady/Desktop/zhong_research/stm32f4-bare-metal/projects/semihost_blink/high.txt";
-    char* low_path = "/Users/jacksondgrady/Desktop/zhong_research/stm32f4-bare-metal/projects/semihost_blink/low.txt";
-    FileInput high;
-    high.path = high_path;
-    high.path_length = str_len(high_path);
-    high.perms = 2;
+    //GPIOD->ODR ^= (1U << 14);
 
-    FileInput low;
-    low.path = low_path;
-    low.path_length = str_len(low_path);
-    low.perms = 2;
+    //println_int((int)&GPIOD->ODR);
 
-    println_str("opening files...");
+    //syscall(0x1FF, 0);
 
-    int high_fd = open_host_file(&high);
-    int low_fd = open_host_file(&low);
+    //println_int((int)GPIOD->ODR);
 
-    println_str("opened files");
-    // *ptr |= (1 << 12);
-    //*(ptr) = 1;
-
-    ReadInput green_led;
-    green_led.fd = high_fd;
-    green_led.buff = 0x40020C14;
-    green_led.num_bytes = 4;
 
     //println_str("writing to target memory...");
     
-    while(1){
-
-        green_led.fd = high_fd;
-
-        read_host_file_to_mem(&green_led);
-
-
-        for(int i = 0; i < 500000; i++){
-
-        }
-        green_led.fd = low_fd;
-
-        read_host_file_to_mem(&green_led);
-
-        for(int i = 0; i < 500000; i++){
-            
-        }
-
-
-    }
-
+    
+    int i = 0;
     while (1){
-
+        if(i % 100000 == 0){
+            GPIOD->ODR ^= (1U << 14);
+        }
+        i++;
     }
     __asm("NOP"); // Assembly inline can be used if needed
     return 0;
