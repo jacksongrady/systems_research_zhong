@@ -1,0 +1,3 @@
+halt
+dump_image snapshots/red_blinky 0 128000
+resume
