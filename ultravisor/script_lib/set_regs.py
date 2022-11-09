@@ -1,7 +1,10 @@
+import sys
+
+prog_no = sys.argv[1]
 
 tcl_input = "set_reg {"
 
-with open('regs.txt', 'r') as file:
+with open(f'../register_data/program_{prog_no}_registers.txt', 'r', errors='ignore') as file:
     data = file.read()
 
     lines = data.split('\n')

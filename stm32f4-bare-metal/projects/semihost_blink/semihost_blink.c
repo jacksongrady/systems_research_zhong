@@ -58,10 +58,13 @@ int main(void){
     //println_str("writing to target memory...");
     
     
-    int i = 0;
+    unsigned int i = 0;
     while (1){
         if(i % 100000 == 0){
-            //GPIOD->ODR ^= (1U << 15);
+            GPIOD->ODR ^= (1U << 13);
+        }
+        if(i > 1000000 && i % 100000 == 0){
+            GPIOD->ODR ^= (1U << 12);
         }
         i++;
     }
