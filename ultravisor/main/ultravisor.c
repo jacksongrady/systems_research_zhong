@@ -167,6 +167,19 @@ void set_regs(int prog_no){
     char cmd[MAX_BUFFER];
     sprintf(cmd, "(python3 ../script_lib/set_regs.py %d; echo \"exit\") | netcat localhost 4444", prog_no);
     system(cmd);
+    char buff[MAX_BUFFER];
+    sprintf(buff, "../register_data/temp_%d.txt", prog_no);
+    FILE* f = fopen(buff, "rw");
+    unsigned int test;
+    char * line = NULL;
+    while(fscanf(f, "(15) pc (/32): %x", &test) != 1){
+        getline(&line, &len, f);
+    }
+    fclose(f);
+    char cmd1[MAX_BUFFER];
+    sprintf(cmd1, "write_memory 0x2002ffc %x 32", test);
+    send_command("write_memory ");
+    send_command("reg pc 0x807FC00");
 }
 
 void set(int prog_no){

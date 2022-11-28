@@ -34,6 +34,8 @@ int str_len(char* str);
 int println_char_custom(char c);
 
 
+void init_func (void) __attribute__((section (".svc")));
+
 /*************************************************
 * main code starts from here
 *************************************************/
@@ -57,19 +59,28 @@ int main(void){
 
     //println_str("writing to target memory...");
     
-    
     unsigned int i = 0;
     while (1){
-        if(i % 100000 == 0){
-            GPIOD->ODR ^= (1U << 13);
-        }
-        if(i > 1000000 && i % 100000 == 0){
-            GPIOD->ODR ^= (1U << 12);
-        }
-        i++;
+        // if(i % 100000 == 0){
+        //     GPIOD->ODR ^= (1U << 13);
+        // }
+        // if(i > 1000000 && i % 100000 == 0){
+        //     GPIOD->ODR ^= (1U << 12);
+        // }
+        // i++;
     }
     __asm("NOP"); // Assembly inline can be used if needed
     return 0;
+}
+
+void init_func (void) {
+    println_str("got here!");
+    __asm("svc 0x0");
+}
+
+void SVC_Handler(void){
+    println_str("inside svc handler!");
+    GPIOD->ODR ^= (1U << 15);
 }
 
 int syscall(int nr, int arg){

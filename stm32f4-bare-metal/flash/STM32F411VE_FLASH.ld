@@ -59,7 +59,8 @@ _estack = 0x20020000;    /* end of RAM */
 MEMORY
 {
   RAM (xrw)		: ORIGIN = 0x20000000, LENGTH = 128K
-  ROM (rx)		: ORIGIN = 0x8000000, LENGTH = 512K
+  ROM (rx)		: ORIGIN = 0x8000000, LENGTH = 511K
+  SVC (rx)    : ORIGIN = 0x807FC00, LENGTH = 1K
 }
 
 /* Sections */
@@ -98,6 +99,13 @@ SECTIONS
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
   } >ROM
+
+  /* SVC section*/
+  .svc :
+  {
+    KEEP(*(.svc))          /* .svc sections (code) */
+    _esvc = .;        /* define a global symbols at end of svc */
+  } >SVC
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
