@@ -55,31 +55,51 @@ int main(void){
     //syscall(0x1FF, 0);
 
     //println_int((int)GPIOD->ODR);
+    // __asm(  
+    //         "mov r0, %[test_func];"
+    //         "mov r1, %[addr];"
+    //         "str r0, [r1];"
+    //         :
+    //         : [test_func] "r" (test_func), [addr] "r" (addr)
+    //     );
 
+    //*addr = (void*)test_func;
+    //GPIOD->ODR ^= (1U << 15);
 
-    //println_str("writing to target memory...");
-    
-    unsigned int i = 0;
+   unsigned int i = 0;
     while (1){
-        // if(i % 100000 == 0){
-        //     GPIOD->ODR ^= (1U << 13);
-        // }
+        if(i % 100000 == 0){
+            GPIOD->ODR ^= (1U << 13);
+        }
         // if(i > 1000000 && i % 100000 == 0){
         //     GPIOD->ODR ^= (1U << 12);
         // }
-        // i++;
+        i++;
+        if(i % 500000 == 0)
+            println_str("excecuting inside while loop");
     }
+    
+
+    //println_str("writing to target memory...");
+    
     __asm("NOP"); // Assembly inline can be used if needed
     return 0;
 }
 
 void init_func (void) {
-    println_str("got here!");
     __asm("svc 0x0");
 }
 
 void SVC_Handler(void){
-    println_str("inside svc handler!");
+    __asm(
+    "str r0, [sp, #-4]!;" //push
+    "str r1, [sp, #-4]!;" //push
+    "ldr r0, =#0x2001fff0;"
+    "ldr r1, [r0];"
+    "str r1, [sp, #32];" //should be 32?
+    "ldr r1, [sp], #4;" //pop
+    "ldr r0, [sp], #4;" //pop
+    );
     GPIOD->ODR ^= (1U << 15);
 }
 
